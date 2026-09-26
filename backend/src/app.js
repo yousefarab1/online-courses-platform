@@ -1,6 +1,15 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+
+import authRoutes from "./routes/auth.routes.js";
+import courseRoutes from "./routes/course.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import lessonRoutes from "./routes/lesson.routes.js";
+import progressRoutes from "./routes/progress.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+
+dotenv.config();
 
 const app = express();
 
@@ -8,10 +17,22 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.json({
+    res.status(200).json({
         success: true,
-        message: "test"
+        message: "Online Course Platform API is running"
     });
 });
 
-module.exports = app;
+app.use("/api/auth", authRoutes);
+
+app.use("/api/courses", courseRoutes);
+
+app.use("/api/reviews", reviewRoutes);
+
+app.use("/api/lessons", lessonRoutes);
+
+app.use("/api/progress", progressRoutes);
+
+app.use("/api/admin", adminRoutes);
+
+export default app;
