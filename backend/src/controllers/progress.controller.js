@@ -3,7 +3,7 @@ import Course from "../models/Course.js";
 import Lesson from "../models/Lesson.js";
 
 // Mark Lesson as Completed
-export const completeLesson = async (req, res) => {
+export const completeLesson = async (req, res, next) => {
     try {
         const { courseId, lessonId } = req.params;
 
@@ -83,15 +83,12 @@ export const completeLesson = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // Get Course Progress
-export const getCourseProgress = async (req, res) => {
+export const getCourseProgress = async (req, res, next) => {
     try {
         const { courseId } = req.params;
 
@@ -147,9 +144,6 @@ export const getCourseProgress = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };

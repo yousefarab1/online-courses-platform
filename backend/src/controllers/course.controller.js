@@ -1,7 +1,7 @@
 import Course from "../models/Course.js";
 
 // Create Course
-export const createCourse = async (req, res) => {
+export const createCourse = async (req, res, next) => {
     try {
         const { title, description, price, category, level } = req.body;
 
@@ -28,38 +28,105 @@ export const createCourse = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
 // Get All Courses
-export const getCourses = async (req, res) => {
+export const getCourses = async (req, res, next) => {
     try {
-        const courses = await Course.find()
+        const {
+            search,
+            category,
+            level,
+            minPrice,
+            maxPrice,
+            page = 1,
+            limit = 10,
+            sort
+        } = req.query;
+
+        const filter = {};
+
+        // Search by title
+        if (search) {
+            filter.title = {
+                $regex: search,
+                $options: "i"
+            };
+        }
+
+        // Filter by category
+        if (category) {
+            filter.category = category;
+        }
+
+        // Filter by level
+        if (level) {
+            filter.level = level;
+        }
+
+        // Filter by price
+        if (minPrice !== undefined || maxPrice !== undefined) {
+            filter.price = {};
+
+            if (minPrice !== undefined) {
+                filter.price.$gte = Number(minPrice);
+            }
+
+            if (maxPrice !== undefined) {
+                filter.price.$lte = Number(maxPrice);
+            }
+        }
+
+        // Pagination
+        const skip = (Number(page) - 1) * Number(limit);
+        let sortOption = { createdAt: -1 };
+
+        if (sort === "price-asc") {
+            sortOption = { price: 1 };
+        }
+
+        if (sort === "price-desc") {
+            sortOption = { price: -1 };
+        }
+
+        if (sort === "newest") {
+            sortOption = { createdAt: -1 };
+        }
+
+        if (sort === "oldest") {
+            sortOption = { createdAt: 1 };
+        }
+
+        const courses = await Course.find(filter)
             .populate("instructor", "name email")
-            .populate("students", "name email");
+            .populate("students", "name email")
+            .skip(skip)
+            .limit(Number(limit))
+            .sort(sortOption);
+
+        const total = await Course.countDocuments(filter);
 
         res.status(200).json({
             success: true,
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            totalPages: Math.ceil(total / Number(limit)),
             count: courses.length,
             courses
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
 // Get Single Course
-export const getCourse = async (req, res) => {
+export const getCourse = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.id)
             .populate("instructor", "name email")
@@ -78,16 +145,14 @@ export const getCourse = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
+
 // Update Course
-export const updateCourse = async (req, res) => {
+export const updateCourse = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.id);
 
@@ -123,16 +188,13 @@ export const updateCourse = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
 // Delete Course
-export const deleteCourse = async (req, res) => {
+export const deleteCourse = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.id);
 
@@ -159,15 +221,12 @@ export const deleteCourse = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
-export const getMyCreatedCourses = async (req, res) => {
+export const getMyCreatedCourses = async (req, res, next) => {
     try {
         const courses = await Course.find({
             instructor: req.user.id
@@ -187,9 +246,6 @@ export const getMyCreatedCourses = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };

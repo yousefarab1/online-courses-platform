@@ -3,7 +3,7 @@ import Course from "../models/Course.js";
 import Review from "../models/Review.js";
 
 // Get all users
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find()
             .select("-password")
@@ -15,15 +15,12 @@ export const getAllUsers = async (req, res) => {
             users
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // Get all courses
-export const getAllCourses = async (req, res) => {
+export const getAllCourses = async (req, res, next) => {
     try {
         const courses = await Course.find()
             .populate("instructor", "name email")
@@ -36,16 +33,13 @@ export const getAllCourses = async (req, res) => {
             courses
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
 // delete a user
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
 
@@ -70,15 +64,12 @@ export const deleteUser = async (req, res) => {
             message: "User deleted successfully"
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // delete any course
-export const deleteAnyCourse = async (req, res) => {
+export const deleteAnyCourse = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.id);
 
@@ -96,15 +87,12 @@ export const deleteAnyCourse = async (req, res) => {
             message: "Course deleted successfully"
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // dashboard stats
-export const getDashboardStats = async (req, res) => {
+export const getDashboardStats = async (req, res, next) => {
     try {
         const totalUsers = await User.countDocuments();
 
@@ -151,9 +139,6 @@ export const getDashboardStats = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };

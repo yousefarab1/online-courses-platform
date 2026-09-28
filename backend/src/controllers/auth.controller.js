@@ -2,9 +2,9 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 
 // Register a new user
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try {
-        const { name, email, password, role } = req.body;
+        const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -25,8 +25,7 @@ export const register = async (req, res) => {
         const user = await User.create({
             name,
             email,
-            password,
-            role
+            password
         });
 
         res.status(201).json({
@@ -40,14 +39,12 @@ export const register = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
-export const login = async (req, res) => {
+// Login user
+export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
@@ -104,10 +101,7 @@ export const login = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 

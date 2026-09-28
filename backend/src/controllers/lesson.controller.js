@@ -2,7 +2,7 @@ import Lesson from "../models/Lesson.js";
 import Course from "../models/Course.js";
 
 // Create Lesson
-export const createLesson = async (req, res) => {
+export const createLesson = async (req, res, next) => {
     try {
         const { title, description, videoUrl, order, duration } = req.body;
 
@@ -45,15 +45,12 @@ export const createLesson = async (req, res) => {
             lesson
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // Get Lessons for a Course
-export const getCourseLessons = async (req, res) => {
+export const getCourseLessons = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.courseId);
 
@@ -74,15 +71,12 @@ export const getCourseLessons = async (req, res) => {
             lessons
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // Update Lesson
-export const updateLesson = async (req, res) => {
+export const updateLesson = async (req, res, next) => {
     try {
         const lesson = await Lesson.findById(req.params.id);
 
@@ -131,15 +125,12 @@ export const updateLesson = async (req, res) => {
             lesson
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 // Delete Lesson
-export const deleteLesson = async (req, res) => {
+export const deleteLesson = async (req, res, next) => {
     try {
         const lesson = await Lesson.findById(req.params.id);
 
@@ -173,9 +164,6 @@ export const deleteLesson = async (req, res) => {
             message: "Lesson deleted successfully"
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };

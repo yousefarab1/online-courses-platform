@@ -8,6 +8,9 @@ import reviewRoutes from "./routes/review.routes.js";
 import lessonRoutes from "./routes/lesson.routes.js";
 import progressRoutes from "./routes/progress.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
+
+import { errorHandler } from "./middleware/error.middleware.js";
 
 dotenv.config();
 
@@ -34,5 +37,9 @@ app.use("/api/lessons", lessonRoutes);
 app.use("/api/progress", progressRoutes);
 
 app.use("/api/admin", adminRoutes);
+
+app.use("/api/comments", commentRoutes);
+
+app.use(errorHandler);
 
 export default app;

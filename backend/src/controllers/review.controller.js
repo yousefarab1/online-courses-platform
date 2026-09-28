@@ -2,7 +2,7 @@ import Review from "../models/Review.js";
 import Course from "../models/Course.js";
 
 // Add Review
-export const addReview = async (req, res) => {
+export const addReview = async (req, res, next) => {
     try {
         const { rating, comment } = req.body;
 
@@ -65,14 +65,11 @@ export const addReview = async (req, res) => {
             review
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
-export const getCourseReviews = async (req, res) => {
+export const getCourseReviews = async (req, res, next) => {
     try {
         const reviews = await Review.find({
             course: req.params.id
@@ -86,9 +83,6 @@ export const getCourseReviews = async (req, res) => {
             reviews
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };

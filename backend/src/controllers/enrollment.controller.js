@@ -1,6 +1,6 @@
 import Course from "../models/Course.js";
 
-export const enrollCourse = async (req, res) => {
+export const enrollCourse = async (req, res, next) => {
     try {
         const course = await Course.findById(req.params.id);
 
@@ -37,15 +37,12 @@ export const enrollCourse = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
 
 
-export const getMyCourses = async (req, res) => {
+export const getMyCourses = async (req, res, next) => {
     try {
         const courses = await Course.find({
             students: req.user.id
@@ -59,9 +56,6 @@ export const getMyCourses = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+        next(error);
     }
 };
