@@ -234,10 +234,10 @@ const ManageLessons = () => {
 
                 <Stack
                     direction={{ xs: "column", sm: "row" }}
-                    justifyContent="space-between"
-                    alignItems={{ xs: "flex-start", sm: "center" }}
+
+
                     spacing={2}
-                    sx={{ mb: 4 }}
+                    sx={{ mb: 4, justifyContent: "space-between", alignItems: { xs: "flex-start", sm: "center" } }}
                 >
                     <Box>
                         <Typography variant="h4" fontWeight={700}>
@@ -324,9 +324,10 @@ const ManageLessons = () => {
                                             type="number"
                                             value={formData.order}
                                             onChange={handleChange}
-                                            inputProps={{ min: 1 }}
+
                                             fullWidth
                                             required
+                                            sx={{ inputProps: { min: 1 } }}
                                         />
 
                                         <TextField
@@ -335,8 +336,8 @@ const ManageLessons = () => {
                                             type="number"
                                             value={formData.duration}
                                             onChange={handleChange}
-                                            inputProps={{ min: 0 }}
                                             fullWidth
+                                            sx={{ inputProps: { min: 0 } }}
                                         />
                                     </Stack>
 
@@ -416,16 +417,20 @@ const ManageLessons = () => {
                                 <CardContent>
                                     <Stack
                                         direction={{ xs: "column", sm: "row" }}
-                                        justifyContent="space-between"
-                                        alignItems={{ xs: "flex-start", sm: "center" }}
+
+
                                         spacing={2}
+                                        sx={{
+                                            justifyContent: "space-between",
+                                            alignItems: { xs: "flex-start", sm: "center" }
+                                        }}
                                     >
                                         <Box sx={{ flex: 1 }}>
                                             <Stack
                                                 direction="row"
                                                 spacing={1}
-                                                alignItems="center"
-                                                sx={{ mb: 1 }}
+
+                                                sx={{ mb: 1, alignItems: "center" }}
                                             >
                                                 <Chip
                                                     label={`Lesson ${lesson.order}`}

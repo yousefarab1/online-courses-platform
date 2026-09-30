@@ -42,12 +42,17 @@ export const getCourses = async (req, res, next) => {
             level,
             minPrice,
             maxPrice,
+            instructor,
             page = 1,
             limit = 10,
             sort
         } = req.query;
 
         const filter = {};
+
+        if (instructor) {
+            filter.instructor = instructor;
+        }
 
         // Search by title
         if (search) {

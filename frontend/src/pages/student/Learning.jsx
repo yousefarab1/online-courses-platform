@@ -348,25 +348,37 @@ const Learning = () => {
                                         width: "100%",
                                         aspectRatio: "16 / 9",
                                         backgroundColor: "#0F172A",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
+                                        overflow: "hidden",
                                     }}
                                 >
                                     {selectedLesson.videoUrl ? (
-                                        <video
-                                            src={selectedLesson.videoUrl}
-                                            controls
+                                        <iframe
+                                            width="100%"
+                                            height="100%"
+                                            src={selectedLesson.videoUrl
+                                                .replace("youtu.be/", "www.youtube.com/embed/")
+                                                .replace("watch?v=", "embed/")
+                                                .split("?")[0]}
+                                            title={selectedLesson.title}
                                             style={{
-                                                width: "100%",
-                                                height: "100%",
-                                                objectFit: "contain",
+                                                border: 0,
                                             }}
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowFullScreen
                                         />
                                     ) : (
-                                        <Typography color="white">
-                                            No video available for this lesson.
-                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                height: "100%",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                            }}
+                                        >
+                                            <Typography color="white">
+                                                No video available for this lesson.
+                                            </Typography>
+                                        </Box>
                                     )}
                                 </Box>
 
@@ -440,7 +452,7 @@ const Learning = () => {
                                             onChange={(e) =>
                                                 setCommentText(e.target.value)
                                             }
-                                            inputProps={{ maxLength: 500 }}
+                                            sx={{ inputProps: { maxLength: 500 } }}
                                         />
 
                                         <Box

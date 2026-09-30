@@ -144,7 +144,7 @@ const Register = () => {
                         <Typography
                             variant="body2"
                             color="text.secondary"
-                            textAlign="center"
+                            sx={{ textAlign: "center" }}
                         >
                             Already have an account?{" "}
                             <Box
