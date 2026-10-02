@@ -142,3 +142,51 @@ export const getDashboardStats = async (req, res, next) => {
         next(error);
     }
 };
+
+// public stats
+export const getPublicStats = async (req, res, next) => {
+    try {
+        const totalStudents = await User.countDocuments({
+            role: "student"
+        });
+
+        const totalInstructors = await User.countDocuments({
+            role: "instructor"
+        });
+
+        const totalCourses = await Course.countDocuments();
+
+        const studentsEnrolled = await Course.aggregate([
+            {
+                $project: {
+                    studentsCount: {
+                        $size: {
+                            $ifNull: ["$students", []]
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: {
+                        $sum: "$studentsCount"
+                    }
+                }
+            }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            stats: {
+                totalStudents,
+                totalInstructors,
+                totalCourses,
+                totalEnrollments:
+                    studentsEnrolled[0]?.total || 0
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};

@@ -5,14 +5,21 @@ import {
     Button,
     Box,
     Container,
+    IconButton,
+    Tooltip,
 } from "@mui/material";
 
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
+import { useThemeMode } from "../../context/ThemeContext";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+
 const Navbar = () => {
     const { user, logout } = useAuth();
+    const { mode, toggleTheme } = useThemeMode();
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -60,6 +67,21 @@ const Navbar = () => {
                             gap: 1,
                         }}
                     >
+                        <Tooltip
+                            title={mode === "light" ? "Dark Mode" : "Light Mode"}
+                        >
+                            <IconButton
+                                onClick={toggleTheme}
+                                color="inherit"
+                                aria-label="toggle theme"
+                            >
+                                {mode === "light" ? (
+                                    <DarkModeIcon />
+                                ) : (
+                                    <LightModeIcon />
+                                )}
+                            </IconButton>
+                        </Tooltip>
                         <Button
                             component={Link}
                             to="/courses"

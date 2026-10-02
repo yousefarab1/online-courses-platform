@@ -196,7 +196,7 @@ const EditCourse = () => {
                             type="number"
                             value={formData.price}
                             onChange={handleChange}
-                            sx={{ inputProps: { min: 0, step: 0.01 } }}
+                            inputProps={{ min: 0, step: 0.01 }}
                             fullWidth
                             required
                         />

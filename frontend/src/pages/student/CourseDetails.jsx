@@ -426,12 +426,12 @@ const CourseDetails = () => {
                             multiline
                             minRows={3}
                             maxRows={6}
+                            inputProps={{ maxLength: 500 }}
                             placeholder="What did you think about this course?"
                             value={reviewComment}
                             onChange={(e) =>
                                 setReviewComment(e.target.value)
                             }
-                            sx={{ maxLength: 500 }}
                         />
 
                         <Box

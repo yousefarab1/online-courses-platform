@@ -4,8 +4,6 @@ A RESTful backend for an online course platform built with **Node.js, Express.js
 
 The platform supports students, instructors, and administrators with authentication, course management, enrollment, lessons, comments, reviews, progress tracking, and administration features.
 
-> **Frontend:** React frontend is currently under development.
-
 ---
 
 ## 📌 Project Overview

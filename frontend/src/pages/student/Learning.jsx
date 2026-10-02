@@ -447,12 +447,12 @@ const Learning = () => {
                                             multiline
                                             minRows={3}
                                             maxRows={6}
+                                            inputProps={{ maxLength: 500 }}
                                             placeholder="Ask a question or share your thoughts..."
                                             value={commentText}
                                             onChange={(e) =>
                                                 setCommentText(e.target.value)
                                             }
-                                            sx={{ inputProps: { maxLength: 500 } }}
                                         />
 
                                         <Box

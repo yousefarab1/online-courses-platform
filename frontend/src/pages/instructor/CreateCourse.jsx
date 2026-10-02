@@ -157,7 +157,7 @@ const CreateCourse = () => {
                             onChange={handleChange}
                             fullWidth
                             required
-                            sx={{ inputProps: { min: 0, step: 0.01 } }}
+                            inputProps={{ min: 0, step: 0.01 }}
                         />
 
                         <FormControl fullWidth required>

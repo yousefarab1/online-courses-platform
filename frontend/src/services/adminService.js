@@ -24,3 +24,8 @@ export const deleteAnyCourse = async (courseId) => {
     const response = await api.delete(`/admin/courses/${courseId}`);
     return response.data;
 };
+
+export const getPublicStats = async () => {
+    const response = await api.get("/stats/public");
+    return response.data;
+};

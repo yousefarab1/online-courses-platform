@@ -377,8 +377,8 @@ const StatCard = ({ title, value, icon }) => {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            bgcolor: "primary.main",
-                            color: "white",
+                            bgcolor: "action.hover",
+                            color: "primary.main",
                         }}
                     >
                         {icon}

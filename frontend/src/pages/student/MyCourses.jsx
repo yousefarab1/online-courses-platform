@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
     Alert,
     Box,
+    Button,
     CircularProgress,
     Container,
     Grid,
+    LinearProgress,
     Typography,
-    Button
 } from "@mui/material";
 
 import { getMyCourses } from "../../services/courseService";
-import CourseCard from "../../components/courses/CourseCard";
+import { getCourseProgress } from "../../services/progressService";
 
+import CourseCard from "../../components/courses/CourseCard";
 
 const MyCourses = () => {
     const [courses, setCourses] = useState([]);
+    const [progress, setProgress] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -26,8 +30,27 @@ const MyCourses = () => {
                 setError("");
 
                 const data = await getMyCourses();
+                const enrolledCourses = data.courses || [];
 
-                setCourses(data.courses || []);
+                setCourses(enrolledCourses);
+
+                // Get progress for every enrolled course
+                const progressData = {};
+
+                await Promise.all(
+                    enrolledCourses.map(async (course) => {
+                        try {
+                            const result = await getCourseProgress(course._id);
+
+                            progressData[course._id] =
+                                result.progress?.progressPercentage || 0;
+                        } catch {
+                            progressData[course._id] = 0;
+                        }
+                    })
+                );
+
+                setProgress(progressData);
             } catch (error) {
                 setError(
                     error.response?.data?.message ||
@@ -73,37 +96,90 @@ const MyCourses = () => {
                         py: 10,
                     }}
                 >
-                    <Typography variant="h5" fontWeight={600} gutterBottom>
+                    <Typography
+                        variant="h5"
+                        fontWeight={600}
+                        gutterBottom
+                    >
                         You haven't enrolled in any courses yet.
                     </Typography>
 
                     <Typography color="text.secondary">
                         Explore our courses and start learning today.
                     </Typography>
+
+                    <Button
+                        component={Link}
+                        to="/courses"
+                        variant="contained"
+                        sx={{ mt: 3 }}
+                    >
+                        Browse Courses
+                    </Button>
                 </Box>
             ) : (
                 <Grid container spacing={3}>
-                    {courses.map((course) => (
-                        <Grid
-                            size={{ xs: 12, sm: 6, md: 4 }}
-                            key={course._id}
-                        >
-                            <Box>
-                                <CourseCard course={course} />
+                    {courses.map((course) => {
+                        const courseProgress = progress[course._id] || 0;
 
-                                <Button
-                                    component={Link}
-                                    to={`/courses/${course._id}/learn`}
-                                    variant="contained"
-                                    fullWidth
-                                    sx={{ mt: 1.5 }}
-                                >
-                                    Continue Learning
-                                </Button>
-                            </Box>
-                        </Grid>
+                        return (
+                            <Grid
+                                size={{ xs: 12, sm: 6, md: 4 }}
+                                key={course._id}
+                            >
+                                <Box>
+                                    <CourseCard course={course} />
 
-                    ))}
+                                    {/* Progress */}
+                                    <Box sx={{ mt: 2 }}>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                mb: 0.5,
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body2"
+                                                color="text.secondary"
+                                            >
+                                                Course Progress
+                                            </Typography>
+
+                                            <Typography
+                                                variant="body2"
+                                                fontWeight={600}
+                                            >
+                                                {courseProgress}%
+                                            </Typography>
+                                        </Box>
+
+                                        <LinearProgress
+                                            variant="determinate"
+                                            value={courseProgress}
+                                            sx={{
+                                                height: 8,
+                                                borderRadius: 4,
+                                            }}
+                                        />
+                                    </Box>
+
+                                    {/* Continue Learning */}
+                                    <Button
+                                        component={Link}
+                                        to={`/courses/${course._id}/learn`}
+                                        variant="contained"
+                                        fullWidth
+                                        sx={{ mt: 1.5 }}
+                                    >
+                                        {courseProgress === 100
+                                            ? "Review Course"
+                                            : "Continue Learning"}
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        );
+                    })}
                 </Grid>
             )}
         </Container>

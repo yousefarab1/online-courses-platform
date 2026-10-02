@@ -34,17 +34,20 @@ const Courses = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-    const loadCourses = async () => {
+    const loadCourses = async (
+        currentPage = page,
+        currentSearch = search
+    ) => {
         try {
             setLoading(true);
             setError("");
 
             const data = await getCourses({
-                search,
+                search: currentSearch,
                 category,
                 level,
                 sort,
-                page,
+                page: currentPage,
                 limit: 9,
             });
 
@@ -67,7 +70,7 @@ const Courses = () => {
     const handleSearch = (event) => {
         event.preventDefault();
         setPage(1);
-        loadCourses();
+        loadCourses(1, search);
     };
 
     const handleFilterChange = (setter) => (event) => {

@@ -12,6 +12,8 @@ import commentRoutes from "./routes/comment.routes.js";
 
 import { errorHandler } from "./middleware/error.middleware.js";
 
+import statsRoutes from "./routes/stats.routes.js";
+
 dotenv.config();
 
 const app = express();
@@ -39,6 +41,8 @@ app.use("/api/progress", progressRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.use("/api/comments", commentRoutes);
+
+app.use("/api/stats", statsRoutes);
 
 app.use(errorHandler);
 
